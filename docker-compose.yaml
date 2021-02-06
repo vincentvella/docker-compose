@@ -4,12 +4,24 @@ services:
     image: 'mongo'
     volumes:
       - data:/data/db
-    environment: 
-      MONGO_INITDB_ROOT_USERNAME: vince
-      MONGO_INITDB_ROOT_PASSWORD: secret
-  # backend:
+    env_file: 
+      - ./env/mongodb.env
+
+  backend:
+    build: ./backend
+    ports:
+      - '80:80'
+    volumes: 
+      - logs:/usr/src/app/logs
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    env_file: 
+      - ./env/backend.env
+    depends_on: 
+      - mongodb
 
   # frontend:
 
 volumes:
   data:
+  logs:
